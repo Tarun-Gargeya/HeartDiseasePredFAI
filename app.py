@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / "models" / "rf_heart.joblib"
 FIG = ROOT / "figures"
 
-st.set_page_config(page_title="Heart Disease Predictor", page_icon="❤️", layout="wide")
+st.set_page_config(page_title="Heart Disease Risk Prediction", layout="wide")
 
 
 @st.cache_resource
@@ -30,32 +30,32 @@ model = bundle["model"]
 rf = model.named_steps["clf"]
 tm = bundle["test_metrics"]
 
-st.title("❤️ Heart Disease Prediction — Random Forest")
-st.caption("FAI Case Study · UCI Heart Disease data (920 patients) · "
-           "Educational demo, **not** a medical device.")
+st.title("Heart Disease Risk Prediction")
+st.caption("Random Forest classifier trained on the UCI Heart Disease dataset (920 patients). "
+           "For educational purposes only; not intended for clinical use.")
 
-tab_pred, tab_model, tab_figs = st.tabs(["🩺 Predict", "🌲 How the forest decides", "📊 Results"])
+tab_pred, tab_model, tab_figs = st.tabs(["Prediction", "Model Details", "Evaluation"])
 
 # ------------------------------------------------------------------ inputs
 with st.sidebar:
-    st.header("Patient details")
+    st.header("Patient Information")
     age = st.slider("Age", 20, 80, 54)
     sex = st.radio("Sex", ["M", "F"], horizontal=True)
     cp = st.selectbox("Chest pain type", ["ASY", "NAP", "ATA", "TA"],
-                      format_func=lambda v: {"ASY": "ASY – Asymptomatic", "NAP": "NAP – Non-anginal pain",
-                                             "ATA": "ATA – Atypical angina", "TA": "TA – Typical angina"}[v])
+                      format_func=lambda v: {"ASY": "ASY: Asymptomatic", "NAP": "NAP: Non-anginal pain",
+                                             "ATA": "ATA: Atypical angina", "TA": "TA: Typical angina"}[v])
     bp = st.slider("Resting blood pressure (mm Hg)", 80, 200, 130)
     chol = st.slider("Serum cholesterol (mg/dl)", 100, 600, 240)
-    fbs = st.radio("Fasting blood sugar > 120 mg/dl?", [0, 1], horizontal=True,
+    fbs = st.radio("Fasting blood sugar > 120 mg/dl", [0, 1], horizontal=True,
                    format_func=lambda v: "Yes" if v else "No")
     ecg = st.selectbox("Resting ECG", ["Normal", "ST", "LVH"])
-    maxhr = st.slider("Max heart rate achieved", 60, 210, 140)
-    exang = st.radio("Exercise-induced angina?", ["N", "Y"], horizontal=True,
+    maxhr = st.slider("Maximum heart rate achieved (bpm)", 60, 210, 140)
+    exang = st.radio("Exercise-induced angina", ["N", "Y"], horizontal=True,
                      format_func=lambda v: "Yes" if v == "Y" else "No")
-    oldpeak = st.slider("Oldpeak (ST depression)", -2.5, 6.5, 1.0, 0.1)
+    oldpeak = st.slider("ST depression (Oldpeak)", -2.5, 6.5, 1.0, 0.1)
     slope = st.selectbox("ST slope", ["Up", "Flat", "Down"])
     threshold = st.slider("Decision threshold", 0.2, 0.8, 0.5, 0.05,
-                          help="Lower = catch more patients (higher recall) at the cost of more false alarms.")
+                          help="Lower thresholds increase sensitivity (fewer missed cases) at the cost of more false positives.")
 
 patient = pd.DataFrame([{
     "Age": age, "RestingBP": bp, "Cholesterol": chol, "FastingBS": fbs, "MaxHR": maxhr,
@@ -70,32 +70,37 @@ votes = np.array([t.predict(Xt)[0] for t in rf.estimators_])
 # ------------------------------------------------------------------ predict tab
 with tab_pred:
     c1, c2, c3 = st.columns(3)
-    c1.metric("Predicted risk of heart disease", f"{prob:.0%}")
-    c2.metric("Trees voting 'disease'", f"{int(votes.sum())} / {len(votes)}")
-    c3.metric("Decision (threshold " + f"{threshold:.2f})", "⚠️ At risk" if prob >= threshold else "✅ Low risk")
+    c1.metric("Predicted probability of heart disease", f"{prob:.1%}")
+    c2.metric("Trees predicting heart disease", f"{int(votes.sum())} of {len(votes)}")
+    c3.metric(f"Classification (threshold {threshold:.2f})", "Positive" if prob >= threshold else "Negative")
     st.progress(float(prob))
     if prob >= threshold:
-        st.error("The model flags this patient as **likely to have heart disease**. "
-                 "In a real setting this would prompt further clinical tests.")
+        st.warning("The model classifies this patient as likely to have heart disease. "
+                   "In a clinical setting, this would indicate the need for further diagnostic testing.")
     else:
-        st.success("The model predicts **no heart disease** for this patient.")
-    st.caption("Risk = average of the class probabilities from all trees in the forest.")
+        st.info("The model classifies this patient as unlikely to have heart disease.")
+    st.caption("The predicted probability is the average of the class probabilities across all trees in the forest.")
 
 # ------------------------------------------------------------------ model tab
 with tab_model:
-    st.subheader("Votes from individual trees")
-    st.write(f"The forest has **{len(rf.estimators_)} trees**, each trained on a different bootstrap sample "
-             f"and considering only a random subset of features at every split "
-             f"(`max_features={bundle['best_params'].get('max_features')}`). "
-             "The final prediction combines all of them.")
+    st.subheader("Ensemble Composition")
+    st.write(f"The forest consists of {len(rf.estimators_)} decision trees. Each tree is trained on a "
+             f"bootstrap sample of the training data and considers a random subset of features at each split "
+             f"(max_features = {bundle['best_params'].get('max_features')}). The chart below shows the "
+             "probability of heart disease estimated by each individual tree for the current patient, sorted "
+             "in ascending order.")
     tree_probs = np.array([t.predict_proba(Xt)[0, 1] for t in rf.estimators_])
-    st.bar_chart(pd.DataFrame({"P(disease) per tree": np.sort(tree_probs)}), height=250)
-    st.subheader("Best hyperparameters (from 5-fold grid search)")
-    st.json(bundle["best_params"])
-    st.subheader("Held-out test-set performance")
-    st.dataframe(pd.DataFrame({k: [tm[k]] for k in
-                               ("accuracy", "precision", "recall", "specificity", "f1", "roc_auc")}).round(3),
+    st.bar_chart(pd.DataFrame({"Probability of heart disease": np.sort(tree_probs)}), height=250)
+    st.subheader("Hyperparameters")
+    st.caption("Selected by grid search with 5-fold stratified cross-validation (ROC-AUC).")
+    st.dataframe(pd.DataFrame({"Parameter": list(bundle["best_params"]),
+                               "Value": [str(v) for v in bundle["best_params"].values()]}),
                  hide_index=True)
+    st.subheader("Test-Set Performance")
+    st.caption("Evaluated on a held-out test set of 184 patients (threshold 0.50).")
+    labels = {"accuracy": "Accuracy", "precision": "Precision", "recall": "Recall",
+              "specificity": "Specificity", "f1": "F1 score", "roc_auc": "ROC-AUC"}
+    st.dataframe(pd.DataFrame({v: [round(tm[k], 3)] for k, v in labels.items()}), hide_index=True)
 
 # ------------------------------------------------------------------ figures tab
 with tab_figs:
