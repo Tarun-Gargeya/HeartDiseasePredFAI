@@ -1,0 +1,419 @@
+{
+  "eda": {
+    "n_rows": 920,
+    "n_features": 11,
+    "class_counts": {
+      "0": 411,
+      "1": 509
+    },
+    "missing": {
+      "RestingBP": 60,
+      "Cholesterol": 202,
+      "FastingBS": 90,
+      "RestingECG": 2,
+      "MaxHR": 55,
+      "ExerciseAngina": 55,
+      "Oldpeak": 62,
+      "ST_Slope": 309
+    },
+    "rows_per_source": {
+      "Cleveland": 303,
+      "Hungarian": 294,
+      "Va": 200,
+      "Switzerland": 123
+    },
+    "disease_rate_per_source": {
+      "Cleveland": 0.459,
+      "Hungarian": 0.361,
+      "Switzerland": 0.935,
+      "Va": 0.745
+    },
+    "sex_counts": {
+      "M": 726,
+      "F": 194
+    },
+    "disease_rate_by_sex": {
+      "F": 0.258,
+      "M": 0.632
+    },
+    "numeric_summary": {
+      "Age": {
+        "count": 920.0,
+        "mean": 53.51,
+        "std": 9.42,
+        "min": 28.0,
+        "25%": 47.0,
+        "50%": 54.0,
+        "75%": 60.0,
+        "max": 77.0
+      },
+      "RestingBP": {
+        "count": 860.0,
+        "mean": 132.29,
+        "std": 18.54,
+        "min": 80.0,
+        "25%": 120.0,
+        "50%": 130.0,
+        "75%": 140.0,
+        "max": 200.0
+      },
+      "Cholesterol": {
+        "count": 718.0,
+        "mean": 246.83,
+        "std": 58.53,
+        "min": 85.0,
+        "25%": 210.0,
+        "50%": 239.5,
+        "75%": 276.75,
+        "max": 603.0
+      },
+      "FastingBS": {
+        "count": 830.0,
+        "mean": 0.17,
+        "std": 0.37,
+        "min": 0.0,
+        "25%": 0.0,
+        "50%": 0.0,
+        "75%": 0.0,
+        "max": 1.0
+      },
+      "MaxHR": {
+        "count": 865.0,
+        "mean": 137.55,
+        "std": 25.93,
+        "min": 60.0,
+        "25%": 120.0,
+        "50%": 140.0,
+        "75%": 157.0,
+        "max": 202.0
+      },
+      "Oldpeak": {
+        "count": 858.0,
+        "mean": 0.88,
+        "std": 1.09,
+        "min": -2.6,
+        "25%": 0.0,
+        "50%": 0.5,
+        "75%": 1.5,
+        "max": 6.2
+      }
+    },
+    "top_target_correlations": {
+      "ChestPainType_ASY": 0.516,
+      "ExerciseAngina_N": -0.443,
+      "ExerciseAngina_Y": 0.434,
+      "ChestPainType_ATA": -0.403,
+      "MaxHR": -0.395,
+      "Oldpeak": 0.386,
+      "ST_Slope_Flat": 0.339,
+      "Sex_F": -0.307,
+      "Sex_M": 0.307,
+      "Age": 0.283
+    }
+  },
+  "split": {
+    "train": 736,
+    "test": 184,
+    "train_pos_rate": 0.553,
+    "test_pos_rate": 0.554
+  },
+  "tuning": {
+    "search_space": {
+      "n_estimators": [
+        "100",
+        "300"
+      ],
+      "max_depth": [
+        "None",
+        "4",
+        "6",
+        "8",
+        "10"
+      ],
+      "min_samples_split": [
+        "2",
+        "5",
+        "10"
+      ],
+      "min_samples_leaf": [
+        "1",
+        "2",
+        "4"
+      ],
+      "max_features": [
+        "sqrt",
+        "log2",
+        "0.5"
+      ],
+      "class_weight": [
+        "None",
+        "balanced"
+      ]
+    },
+    "n_combinations": 540,
+    "cv_folds": 5,
+    "scoring": "roc_auc",
+    "best_params": {
+      "class_weight": "balanced",
+      "max_depth": 6,
+      "max_features": "sqrt",
+      "min_samples_leaf": 1,
+      "min_samples_split": 10,
+      "n_estimators": 300
+    },
+    "best_cv_roc_auc": 0.8743549735419653,
+    "search_seconds": 104.6
+  },
+  "models": {
+    "Logistic Regression": {
+      "accuracy": 0.8206521739130435,
+      "precision": 0.822429906542056,
+      "recall": 0.8627450980392157,
+      "specificity": 0.7682926829268293,
+      "f1": 0.8421052631578947,
+      "roc_auc": 0.8994500239120039,
+      "avg_precision": 0.9177963143784018,
+      "tn": 63,
+      "fp": 19,
+      "fn": 14,
+      "tp": 88,
+      "train_accuracy": 0.8097826086956522,
+      "cv_accuracy_mean": 0.7880860452289025,
+      "cv_accuracy_std": 0.03606240428705936,
+      "cv_roc_auc_mean": 0.873411587910233,
+      "cv_roc_auc_std": 0.022523962102277632
+    },
+    "KNN (k=7)": {
+      "accuracy": 0.8152173913043478,
+      "precision": 0.7982456140350878,
+      "recall": 0.8921568627450981,
+      "specificity": 0.7195121951219512,
+      "f1": 0.8425925925925926,
+      "roc_auc": 0.8786465805834529,
+      "avg_precision": 0.8614250443692093,
+      "tn": 59,
+      "fp": 23,
+      "fn": 11,
+      "tp": 91,
+      "train_accuracy": 0.8301630434782609,
+      "cv_accuracy_mean": 0.7921309064166208,
+      "cv_accuracy_std": 0.03141531571860237,
+      "cv_roc_auc_mean": 0.8492967616544853,
+      "cv_roc_auc_std": 0.021841935004531472
+    },
+    "Decision Tree": {
+      "accuracy": 0.6467391304347826,
+      "precision": 0.6868686868686869,
+      "recall": 0.6666666666666666,
+      "specificity": 0.6219512195121951,
+      "f1": 0.6766169154228856,
+      "roc_auc": 0.6443089430894308,
+      "avg_precision": 0.64269506660811,
+      "tn": 51,
+      "fp": 31,
+      "fn": 34,
+      "tp": 68,
+      "train_accuracy": 1.0,
+      "cv_accuracy_mean": 0.7323405037690751,
+      "cv_accuracy_std": 0.040467227326444206,
+      "cv_roc_auc_mean": 0.7267104229705856,
+      "cv_roc_auc_std": 0.04560181230811954
+    },
+    "Random Forest (default)": {
+      "accuracy": 0.8043478260869565,
+      "precision": 0.8,
+      "recall": 0.8627450980392157,
+      "specificity": 0.7317073170731707,
+      "f1": 0.8301886792452831,
+      "roc_auc": 0.9006456241032997,
+      "avg_precision": 0.9123306611038711,
+      "tn": 60,
+      "fp": 22,
+      "fn": 14,
+      "tp": 88,
+      "train_accuracy": 1.0,
+      "cv_accuracy_mean": 0.7975638904210332,
+      "cv_accuracy_std": 0.026579824566607024,
+      "cv_roc_auc_mean": 0.8598671342709283,
+      "cv_roc_auc_std": 0.024776424495225904
+    },
+    "Random Forest (tuned)": {
+      "accuracy": 0.7989130434782609,
+      "precision": 0.8282828282828283,
+      "recall": 0.803921568627451,
+      "specificity": 0.7926829268292683,
+      "f1": 0.8159203980099502,
+      "roc_auc": 0.9082974653275944,
+      "avg_precision": 0.9271540477583512,
+      "tn": 65,
+      "fp": 17,
+      "fn": 20,
+      "tp": 82,
+      "train_accuracy": 0.8777173913043478,
+      "cv_accuracy_mean": 0.7934730649016364,
+      "cv_accuracy_std": 0.03406730901509671,
+      "cv_roc_auc_mean": 0.8743549735419653,
+      "cv_roc_auc_std": 0.02384987637444469
+    }
+  },
+  "oob_score": 0.7853260869565217,
+  "feature_importance_mdi": {
+    "ChestPainType_ASY": 0.1636,
+    "ExerciseAngina_N": 0.1053,
+    "MaxHR": 0.101,
+    "Oldpeak": 0.0989,
+    "ExerciseAngina_Y": 0.0912,
+    "Age": 0.0862,
+    "ChestPainType_ATA": 0.0586,
+    "Cholesterol": 0.0545,
+    "ST_Slope_Flat": 0.0412,
+    "RestingBP": 0.038,
+    "Sex_F": 0.0362,
+    "Sex_M": 0.0351,
+    "ST_Slope_Unknown": 0.0173,
+    "ChestPainType_NAP": 0.0154,
+    "ST_Slope_Up": 0.0117,
+    "RestingECG_ST": 0.0103,
+    "FastingBS": 0.0083,
+    "RestingECG_Normal": 0.0076,
+    "ChestPainType_TA": 0.0058,
+    "RestingECG_LVH": 0.005,
+    "ST_Slope_Down": 0.0047,
+    "ExerciseAngina_Unknown": 0.0041
+  },
+  "feature_importance_permutation": {
+    "ChestPainType": 0.0891,
+    "ExerciseAngina": 0.0266,
+    "Sex": 0.0197,
+    "Oldpeak": 0.0108,
+    "MaxHR": 0.0093,
+    "ST_Slope": 0.0092,
+    "Cholesterol": 0.0022,
+    "Age": 0.0018,
+    "RestingBP": 0.0011,
+    "FastingBS": 0.0009,
+    "RestingECG": -0.001
+  },
+  "error_vs_trees": {
+    "n_trees": [
+      5,
+      10,
+      15,
+      20,
+      30,
+      40,
+      50,
+      75,
+      100,
+      150,
+      200,
+      300,
+      400,
+      500
+    ],
+    "oob_error": [
+      0.24728260869565222,
+      0.22010869565217395,
+      0.22010869565217395,
+      0.2255434782608695,
+      0.2092391304347826,
+      0.2119565217391305,
+      0.20380434782608692,
+      0.20788043478260865,
+      0.2092391304347826,
+      0.2092391304347826,
+      0.20516304347826086,
+      0.21467391304347827,
+      0.21059782608695654,
+      0.20516304347826086
+    ],
+    "test_error": [
+      0.21739130434782605,
+      0.20108695652173914,
+      0.2065217391304348,
+      0.2065217391304348,
+      0.17391304347826086,
+      0.17391304347826086,
+      0.17934782608695654,
+      0.20108695652173914,
+      0.20108695652173914,
+      0.19021739130434778,
+      0.19021739130434778,
+      0.20108695652173914,
+      0.20108695652173914,
+      0.2065217391304348
+    ]
+  },
+  "threshold_analysis": [
+    {
+      "threshold": 0.3,
+      "accuracy": 0.8097826086956522,
+      "precision": 0.7557251908396947,
+      "recall": 0.9705882352941176,
+      "specificity": 0.6097560975609756,
+      "f1": 0.8497854077253219,
+      "fn": 3,
+      "fp": 32
+    },
+    {
+      "threshold": 0.35,
+      "accuracy": 0.8043478260869565,
+      "precision": 0.7619047619047619,
+      "recall": 0.9411764705882353,
+      "specificity": 0.6341463414634146,
+      "f1": 0.8421052631578947,
+      "fn": 6,
+      "fp": 30
+    },
+    {
+      "threshold": 0.4,
+      "accuracy": 0.8043478260869565,
+      "precision": 0.775,
+      "recall": 0.9117647058823529,
+      "specificity": 0.6707317073170732,
+      "f1": 0.8378378378378378,
+      "fn": 9,
+      "fp": 27
+    },
+    {
+      "threshold": 0.45,
+      "accuracy": 0.8043478260869565,
+      "precision": 0.7946428571428571,
+      "recall": 0.8725490196078431,
+      "specificity": 0.7195121951219512,
+      "f1": 0.8317757009345794,
+      "fn": 13,
+      "fp": 23
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 0.7989130434782609,
+      "precision": 0.8282828282828283,
+      "recall": 0.803921568627451,
+      "specificity": 0.7926829268292683,
+      "f1": 0.8159203980099502,
+      "fn": 20,
+      "fp": 17
+    },
+    {
+      "threshold": 0.55,
+      "accuracy": 0.8043478260869565,
+      "precision": 0.8586956521739131,
+      "recall": 0.7745098039215687,
+      "specificity": 0.8414634146341463,
+      "f1": 0.8144329896907216,
+      "fn": 23,
+      "fp": 13
+    },
+    {
+      "threshold": 0.6,
+      "accuracy": 0.7934782608695652,
+      "precision": 0.8636363636363636,
+      "recall": 0.7450980392156863,
+      "specificity": 0.8536585365853658,
+      "f1": 0.8,
+      "fn": 26,
+      "fp": 12
+    }
+  ]
+}
