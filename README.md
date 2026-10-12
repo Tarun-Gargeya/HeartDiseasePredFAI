@@ -68,7 +68,6 @@ data/                  Raw UCI files + heart.csv
 figures/               12 result figures
 results/               metrics.json, model_comparison.csv, threshold_analysis.csv
 models/rf_heart.joblib Trained pipeline
-docs/REPORT_BRIEF.md   Detailed write-up used as the reference for the report
 ```
 
 ## Limitations
